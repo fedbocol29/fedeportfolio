@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federico Bocol III | Interactive Portfolio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Devicon Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #07090e;
+            --card-bg: rgba(18, 22, 36, 0.65);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.4);
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        canvas#glitterCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #a5f3fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            padding: 160px 0 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar-frame {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            padding: 8px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            box-shadow: 0 0 35px var(--primary-glow);
+            animation: pulseGlow 4s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 25px var(--primary-glow); transform: scale(1); }
+            100% { box-shadow: 0 0 50px var(--accent-glow); transform: scale(1.02); }
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #1a1e2e;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(129, 140, 248, 0.1);
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: 30px;
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        .hero-contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .hero-contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-contact-info i {
+            color: var(--primary);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+            color: #fff;
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(129, 140, 248, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px -5px var(--primary-glow);
+            transform: translateY(-5px);
+        }
+
+        .tool-card i {
+            font-size: 2.5rem;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .job-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .company-name {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .job-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .timeline-body ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-body li {
+            position: relative;
+            padding-left: 24px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .timeline-body li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(129, 140, 248, 0.1);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 850px) {
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .hero-contact-info {
+                justify-content: center;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="glitterCanvas"></canvas>
+
+    <header>
+        <div class="logo">FEDERICO.</div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero" id="about">
+            <div class="hero-content">
+                <div class="badge">
+                    <span class="badge-dot"></span> Available for Work
+                </div>
+                <h1>Hi, I'm <span>Federico Bocol III</span></h1>
+                <p>Results-driven Technical Support Professional, Cold Caller, and Administrative Specialist with 3+ years of experience in multichannel communication, CRM systems, and client relationship management[cite: 1].</p>
+                
+                <div class="hero-contact-info">
+                    <div><i class="fa-solid fa-envelope"></i> fedbocol29@gmail.com</div>[cite: 1]
+                    <div><i class="fa-solid fa-phone"></i> 09156283563</div>[cite: 1]
+                    <div><i class="fa-solid fa-location-dot"></i> Kabankalan City, Negros Occidental</div>[cite: 1]
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="mailto:fedbocol29@gmail.com" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Contact Me</a>[cite: 1]
+                    <a href="#experience" class="btn btn-secondary">View Experience</a>
+                </div>
+            </div>
+
+            <div class="hero-avatar-container">
+                <div class="avatar-frame">
+                    <!-- Cartoon Avatar SVG Embed -->
+                    <svg class="avatar-img" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="400" fill="#131726"/>
+                        <circle cx="200" cy="200" r="160" fill="#1c233a"/>
+                        <path d="M120 380 Q200 320 280 380 L280 400 L120 400 Z" fill="#1a233d"/>
+                        <path d="M150 380 L250 380 L230 290 L170 290 Z" fill="#ffffff"/>
+                        <path d="M185 290 L215 290 L210 380 L190 380 Z" fill="#1a2544"/>
+                        <path d="M120 320 L170 290 L185 380 L130 380 Z" fill="#1d2640"/>
+                        <path d="M280 320 L230 290 L215 380 L270 380 Z" fill="#1d2640"/>
+                        <path d="M175 220 Q200 250 225 220 L220 295 Q200 305 180 295 Z" fill="#e8beac"/>
+                        <circle cx="200" cy="190" r="75" fill="#f5cdba"/>
+                        <path d="M125 180 Q120 200 128 215 Q135 210 132 190 Z" fill="#e8beac"/>
+                        <path d="M275 180 Q280 200 272 215 Q265 210 268 190 Z" fill="#e8beac"/>
+                        <path d="M130 175 Q125 105 200 100 Q275 105 270 175 Q255 125 200 120 Q145 125 130 175 Z" fill="#2a2421"/>
+                        <path d="M150 160 Q170 150 185 162" stroke="#2a2421" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M250 160 Q230 150 215 162" stroke="#2a2421" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="168" cy="182" rx="10" ry="7" fill="#ffffff"/>
+                        <ellipse cx="232" cy="182" rx="10" ry="7" fill="#ffffff"/>
+                        <circle cx="168" cy="182" r="5" fill="#3d2a1d"/>
+                        <circle cx="232" cy="182" r="5" fill="#3d2a1d"/>
+                        <path d="M195 185 Q200 205 205 185" stroke="#d6a28c" stroke-width="3" fill="none"/>
+                        <path d="M180 220 Q200 232 220 220" stroke="#b86b6b" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools">
+            <h2 class="section-title">Tools & Software</h2>
+            <p class="section-subtitle">Platforms I rely on daily to streamline technical support and administrative workflows.</p>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <i class="devicon-salesforce-plain colored"></i>
+                    <span>Salesforce</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-file-excel" style="color: #22c55e;"></i>
+                    <span>Google Sheets</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-table" style="color: #10b981;"></i>
+                    <span>MS Excel</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-file-word" style="color: #3b82f6;"></i>
+                    <span>MS Word</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-file-lines" style="color: #60a5fa;"></i>
+                    <span>Google Docs</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-envelope" style="color: #ef4444;"></i>
+                    <span>Gmail</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-database" style="color: #818cf8;"></i>
+                    <span>CRM Systems</span>[cite: 1]
+                </div>
+                <div class="tool-card">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #22d3ee;"></i>
+                    <span>Web Research</span>[cite: 1]
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2 class="section-title">Work Experience</h2>
+            <p class="section-subtitle">My professional track record in customer support and lead generation.</p>
+
+            <div class="timeline">
+                <div class="glass-card">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Customer Advisor I</div>
+                            <div class="company-name">Concentrix</div>[cite: 1]
+                        </div>
+                        <span class="job-date">2022 – 2025</span>[cite: 1]
+                    </div>
+                    <div class="timeline-body">
+                        <ul>
+                            <li>Entered, updated, and maintained customer and service data in CRM systems with 100% accuracy[cite: 1].</li>
+                            <li>Processed work orders for service changes/upgrades and scheduled technician appointments[cite: 1].</li>
+                            <li>Researched and resolved complex technical issues through root cause analysis using internal knowledge bases[cite: 1].</li>
+                            <li>Documented customer interactions, technical notes, and follow-ups in CRM systems[cite: 1].</li>
+                            <li>Generated reports and tracked key metrics to support team performance and service quality[cite: 1].</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Cold Caller</div>
+                            <div class="company-name">Evergreen Real Estate</div>[cite: 1]
+                        </div>
+                        <span class="job-date">Feb 2026 – June 2026</span>[cite: 1]
+                    </div>
+                    <div class="timeline-body">
+                        <ul>
+                            <li>Conducted high-volume outbound calls to generate and qualify real estate leads[cite: 1].</li>
+                            <li>Researched property owner information using online tools and databases[cite: 1].</li>
+                            <li>Updated CRM records with accurate lead information and call outcomes[cite: 1].</li>
+                            <li>Scheduled appointments for motivated sellers and prospective buyers[cite: 1].</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Core Skills</h2>
+            <p class="section-subtitle">Key competencies I bring to the team.</p>
+
+            <div class="skills-container">
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Technical Support</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> CRM Management</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Data Entry & Accuracy</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Administrative Support</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Calendar & Email Management</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Online & Web Research</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Data Verification</div>[cite: 1]
+                <div class="skill-tag"><i class="fa-solid fa-check"></i> Time Management</div>[cite: 1]
+            </div>
+        </section>
+
+        <section id="education">
+            <h2 class="section-title">Education</h2>
+            <p class="section-subtitle">Academic background and qualifications.</p>
+
+            <div class="glass-card">
+                <div class="timeline-header">
+                    <div>
+                        <div class="job-title">Bachelor of Physical Education</div>[cite: 1]
+                        <div class="company-name">Central Philippines State University</div>[cite: 1]
+                    </div>
+                    <span class="job-date">2018 – 2022</span>[cite: 1]
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer id="contact">
+        <p>© 2026 Federico Bocol III. Built for GitHub Pages.</p>[cite: 1]
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('glitterCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const numParticles = 60;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random();
+                this.fadeSpeed = (Math.random() * 0.01) + 0.005;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity += this.fadeSpeed;
+
+                if (this.opacity >= 1 || this.opacity <= 0) {
+                    this.fadeSpeed = -this.fadeSpeed;
+                }
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(129, 140, 248, ${Math.abs(this.opacity)})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
